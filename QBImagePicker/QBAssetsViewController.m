@@ -195,18 +195,37 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 
 #pragma mark - Toolbar
+- (CGFloat)widthOfString:(NSString *)string withFont:(UIFont *)font {
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] size].width;
+}
 
 - (UIBarButtonItem *)makeOriginalOptionButtonItem: (BOOL) isSelected {
     CGRect buttonRect = CGRectMake(0, 0, 100, 44);
     UIButton *button = [[UIButton alloc] initWithFrame: buttonRect];
     
-    CGFloat circleHeight = 20;
+    NSString *title = NSLocalizedStringFromTableInBundle(@"assets.toolbar.items-original",
+                                                         @"QBImagePicker",
+                                                         self.imagePickerController.assetBundle,
+                                                         nil);
+    UIFont *font = [UIFont systemFontOfSize:15];
+    [[button titleLabel] setFont: font];
+    [button setSelected: isSelected];
+    [button setTitle:title forState: UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setContentHorizontalAlignment: UIControlContentHorizontalAlignmentRight];
+    [button addTarget:self action:@selector(switchOriginalOption:) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat circleHeight = 18;
     UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, circleHeight, circleHeight)];
     circleView.backgroundColor = [UIColor whiteColor];
     circleView.layer.cornerRadius = circleHeight / 2;
     circleView.layer.borderColor = [[UIColor blackColor] CGColor];
     circleView.layer.borderWidth = 2;
-    circleView.center = CGPointMake(button.bounds.size.width / 2 - 8, button.bounds.size.height / 2);
+    circleView.userInteractionEnabled = false;
+    CGFloat titleWidth = [self widthOfString:title withFont:font];
+    CGFloat spacing = 8;
+    circleView.center = CGPointMake(button.bounds.size.width - titleWidth - circleHeight / 2 - spacing, button.bounds.size.height / 2);
     
     CGFloat pieHeight = circleHeight - 7;
     UIView *pieView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, pieHeight, pieHeight)];
@@ -214,19 +233,12 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     pieView.layer.cornerRadius = pieHeight / 2;
     pieView.center = circleView.center;
     pieView.tag = 10086;
+    pieView.userInteractionEnabled = false;
     [pieView setHidden:!isSelected];
     [button addSubview:circleView];
     [button addSubview:pieView];
     
-    [button setSelected: isSelected];
-    [button setTitle:@"原图" forState: UIControlStateNormal];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-    [button setContentHorizontalAlignment: UIControlContentHorizontalAlignmentRight];
-    [button addTarget:self action:@selector(switchOriginalOption:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    return buttonItem;
+    return [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 - (void)switchOriginalOption: (UIButton *)sender {
