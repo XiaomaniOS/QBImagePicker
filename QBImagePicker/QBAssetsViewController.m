@@ -208,7 +208,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
                                                          @"QBImagePicker",
                                                          self.imagePickerController.assetBundle,
                                                          nil);
-    UIFont *font = [UIFont systemFontOfSize:15];
+    UIFont *font = [UIFont systemFontOfSize:14];
     [[button titleLabel] setFont: font];
     [button setSelected: isSelected];
     [button setTitle:title forState: UIControlStateNormal];
@@ -218,7 +218,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     
     CGFloat circleHeight = 18;
     UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, circleHeight, circleHeight)];
-    circleView.backgroundColor = [UIColor whiteColor];
+    circleView.backgroundColor = [UIColor clearColor];
     circleView.layer.cornerRadius = circleHeight / 2;
     circleView.layer.borderColor = [[UIColor blackColor] CGColor];
     circleView.layer.borderWidth = 2;
@@ -227,7 +227,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     CGFloat spacing = 8;
     circleView.center = CGPointMake(button.bounds.size.width - titleWidth - circleHeight / 2 - spacing, button.bounds.size.height / 2);
     
-    CGFloat pieHeight = circleHeight - 7;
+    CGFloat pieHeight = circleHeight - 6;
     UIView *pieView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, pieHeight, pieHeight)];
     pieView.backgroundColor = [UIColor blackColor];
     pieView.layer.cornerRadius = pieHeight / 2;
