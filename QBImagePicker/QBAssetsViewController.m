@@ -187,20 +187,59 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 - (IBAction)done:(id)sender
 {
-    if ([self.imagePickerController.delegate respondsToSelector:@selector(qb_imagePickerController:didFinishPickingAssets:)]) {
-        [self.imagePickerController.delegate qb_imagePickerController:self.imagePickerController
-                                               didFinishPickingAssets:self.imagePickerController.selectedAssets.array];
+    if ([self.imagePickerController.delegate respondsToSelector: @selector(qb_imagePickerController:didFinishPickingAssets:)]) {
+        [self.imagePickerController.delegate qb_imagePickerController: self.imagePickerController
+                                               didFinishPickingAssets: self.imagePickerController.selectedAssets.array];
     }
 }
 
 
 #pragma mark - Toolbar
 
+- (UIBarButtonItem *)makeOriginalOptionButtonItem: (BOOL) isSelected {
+    CGRect buttonRect = CGRectMake(0, 0, 100, 44);
+    UIButton *button = [[UIButton alloc] initWithFrame: buttonRect];
+    
+    CGFloat circleHeight = 20;
+    UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, circleHeight, circleHeight)];
+    circleView.backgroundColor = [UIColor whiteColor];
+    circleView.layer.cornerRadius = circleHeight / 2;
+    circleView.layer.borderColor = [[UIColor blackColor] CGColor];
+    circleView.layer.borderWidth = 2;
+    circleView.center = CGPointMake(button.bounds.size.width / 2 - 8, button.bounds.size.height / 2);
+    
+    CGFloat pieHeight = circleHeight - 7;
+    UIView *pieView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, pieHeight, pieHeight)];
+    pieView.backgroundColor = [UIColor blackColor];
+    pieView.layer.cornerRadius = pieHeight / 2;
+    pieView.center = circleView.center;
+    pieView.tag = 10086;
+    [pieView setHidden:!isSelected];
+    [button addSubview:circleView];
+    [button addSubview:pieView];
+    
+    [button setSelected: isSelected];
+    [button setTitle:@"原图" forState: UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [button setContentHorizontalAlignment: UIControlContentHorizontalAlignmentRight];
+    [button addTarget:self action:@selector(switchOriginalOption:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    return buttonItem;
+}
+
+- (void)switchOriginalOption: (UIButton *)sender {
+    [sender setSelected:![sender isSelected]];
+    self.imagePickerController.isOriginal = [sender isSelected];
+    
+    [[sender viewWithTag:10086] setHidden: !sender.isSelected];
+}
+
 - (void)setUpToolbarItems
 {
     // Space
     UIBarButtonItem *leftSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-    UIBarButtonItem *rightSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
     
     // Info label
     NSDictionary *attributes = @{ NSForegroundColorAttributeName: [UIColor blackColor] };
@@ -209,7 +248,13 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     [infoButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
     [infoButtonItem setTitleTextAttributes:attributes forState:UIControlStateDisabled];
     
-    self.toolbarItems = @[leftSpace, infoButtonItem, rightSpace];
+    if (self.imagePickerController.isShowOriginalImageOption) {
+        UIBarButtonItem *originalOptionItem = [self makeOriginalOptionButtonItem: self.imagePickerController.isOriginal];
+        self.toolbarItems = @[leftSpace, infoButtonItem, originalOptionItem];
+    } else {
+        UIBarButtonItem *rightSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+        self.toolbarItems = @[leftSpace, infoButtonItem, rightSpace];
+    }
 }
 
 - (void)updateSelectionInfo

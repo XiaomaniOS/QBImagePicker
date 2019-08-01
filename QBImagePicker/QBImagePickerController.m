@@ -38,6 +38,8 @@
         self.minimumNumberOfSelection = 1;
         self.numberOfColumnsInPortrait = 4;
         self.numberOfColumnsInLandscape = 7;
+        self.isShowOriginalImageOption = NO;
+        self.isOriginal = NO;
         
         _selectedAssets = [NSMutableOrderedSet orderedSet];
         

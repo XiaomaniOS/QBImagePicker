@@ -30,7 +30,7 @@
     imagePickerController.mediaType = QBImagePickerMediaTypeAny;
     imagePickerController.allowsMultipleSelection = (indexPath.section == 1);
     imagePickerController.showsNumberOfSelectedAssets = YES;
-    
+    imagePickerController.isShowOriginalImageOption = YES;
     if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 1:
@@ -67,6 +67,7 @@
     NSLog(@"Selected assets:");
     NSLog(@"%@", assets);
     
+    NSLog(@"%@", imagePickerController.isOriginal ? @"original" : @"not original");
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
