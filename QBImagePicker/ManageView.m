@@ -40,7 +40,7 @@
         self.assetBundle = [NSBundle bundleWithPath:bundlePath];
     }
     
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, self.bounds.size.width - 76, self.bounds.size.height)];
+    self.label = [UILabel new];
     NSString *title = NSLocalizedStringFromTableInBundle(@"assets.header.tips", @"QBImagePicker", self.assetBundle, nil);
     self.label.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.label.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:255/255.0];
@@ -49,15 +49,20 @@
     self.label.text = title;
     [self addSubview:self.label];
     
-    self.button = [[UIButton alloc] initWithFrame:CGRectMake(self.label.frame.size.width, 0, 76, self.bounds.size.height)];
+    self.button = [UIButton new];
 
     UIFont *font = [UIFont systemFontOfSize:12];
     [[self.button titleLabel] setFont: font];
     NSString *buttonTitle = NSLocalizedStringFromTableInBundle(@"assets.header.manage", @"QBImagePicker", self.assetBundle, nil);
     [self.button setTitle:buttonTitle forState: UIControlStateNormal];
+    [self.button setContentEdgeInsets:UIEdgeInsetsMake(0, 16, 0, 16)];
     [self.button setTitleColor:[UIColor colorWithRed:1/255.0 green:122/255.0 blue:255/255.0 alpha:255/255.0] forState:UIControlStateNormal];
     
     [self addSubview:self.button];
+    
+    [self.button sizeToFit];
+    self.button.frame = CGRectMake(self.bounds.size.width - self.button.bounds.size.width, 0, self.button.bounds.size.width, self.bounds.size.height);
+    self.label.frame = CGRectMake(16, 0, self.bounds.size.width - self.button.bounds.size.width, self.bounds.size.height);
 }
 
 @end
