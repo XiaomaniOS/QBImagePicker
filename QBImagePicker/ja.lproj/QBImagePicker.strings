@@ -19,3 +19,11 @@
 
 "assets.toolbar.item-selected" = "%ld 項目を選択中";
 "assets.toolbar.items-selected" = "%ld 項目を選択中";
+"assets.toolbar.items-original" = "オリジナル";
+
+"assets.header.tips" = "選択した数の写真とビデオへのアクセスをアプリに許可しました。";
+"assets.header.manage" = "管理";
+
+"assets.header.choose-more" = "さらに写真を選択";
+"assets.header.setting" = "設定の変更";
+"assets.header.cancel" = "キャンセル";

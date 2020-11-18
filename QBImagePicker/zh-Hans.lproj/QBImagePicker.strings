@@ -20,3 +20,10 @@
 "assets.toolbar.item-selected" = "选择了%ld项";
 "assets.toolbar.items-selected" = "选择了%ld项";
 "assets.toolbar.items-original" = "原图";
+
+"assets.header.tips" = "您已允许应用访问特定数量的照片和视频";
+"assets.header.manage" = "管理";
+
+"assets.header.choose-more" = "选择更多照片";
+"assets.header.setting" = "更改设置";
+"assets.header.cancel" = "取消";

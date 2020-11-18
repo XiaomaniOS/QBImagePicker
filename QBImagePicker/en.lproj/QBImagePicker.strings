@@ -20,3 +20,10 @@
 "assets.toolbar.item-selected" = "%ld Item Selected";
 "assets.toolbar.items-selected" = "%ld Items Selected";
 "assets.toolbar.items-original" = "Original";
+
+"assets.header.tips" = "You've given App access to a select number of photos and videos.";
+"assets.header.manage" = "Manage";
+
+"assets.header.choose-more" = "Select More Photos";
+"assets.header.setting" = "Change Settings";
+"assets.header.cancel" = "Cancel";

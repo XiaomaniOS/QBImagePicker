@@ -19,3 +19,11 @@
 
 "assets.toolbar.item-selected" = "%ld items seleccionados";
 "assets.toolbar.items-selected" = "%ld items seleccionados";
+"assets.toolbar.items-original" = "Original";
+
+"assets.header.tips" = "Ha dado acceso a la aplicación a un número selecto de fotos y videos.";
+"assets.header.manage" = "Administrar";
+
+"assets.header.choose-more" = "Seleccionar más fotos";
+"assets.header.setting" = "Cambiar configuración";
+"assets.header.cancel" = "Cancelar";

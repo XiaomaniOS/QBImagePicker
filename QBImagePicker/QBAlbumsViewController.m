@@ -15,6 +15,8 @@
 // ViewControllers
 #import "QBImagePickerController.h"
 #import "QBAssetsViewController.h"
+#import "ManageView.h"
+#import "PhotosUI/PHPhotoLibrary+PhotosUISupport.h"
 
 static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     return CGSizeMake(size.width * scale, size.height * scale);
@@ -29,6 +31,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 @interface QBAlbumsViewController () <PHPhotoLibraryChangeObserver>
 
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *doneButton;
+@property (nonatomic, strong) ManageView *manageView;
 
 @property (nonatomic, copy) NSArray *fetchResults;
 @property (nonatomic, copy) NSArray *assetCollections;
@@ -43,6 +46,8 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     
     [self setUpToolbarItems];
     
+    self.manageView = [[ManageView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 44)];
+    
     // Fetch user albums and smart albums
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
@@ -52,6 +57,43 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     
     // Register observer
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+    
+    if (@available(iOS 14.0, *)) {
+        if ([PHPhotoLibrary authorizationStatusForAccessLevel:PHAccessLevelReadWrite] == PHAuthorizationStatusLimited) {
+            self.tableView.tableHeaderView = self.manageView;
+            [self.manageView.button addTarget:self action:@selector(manageClicked:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+}
+
+- (void)manageClicked: (UIButton *)sender {
+    
+    UIAlertController *alert = [UIAlertController new];
+    
+    NSString *moreTitle = NSLocalizedStringFromTableInBundle(@"assets.header.choose-more", @"QBImagePicker", self.imagePickerController.assetBundle, nil);
+    UIAlertAction *more = [UIAlertAction actionWithTitle:moreTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        if (@available(iOS 14.0, *)) {
+            [PHPhotoLibrary.sharedPhotoLibrary presentLimitedLibraryPickerFromViewController:self];
+        }
+    }];
+    [alert addAction:more];
+    
+    NSString *settingTitle = NSLocalizedStringFromTableInBundle(@"assets.header.setting", @"QBImagePicker", self.imagePickerController.assetBundle, nil);
+    UIAlertAction *setting = [UIAlertAction actionWithTitle:settingTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+  
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if (url && [UIApplication.sharedApplication canOpenURL:url]) {
+            [UIApplication.sharedApplication openURL:url];
+        }
+    }];
+    [alert addAction:setting];
+    
+    NSString *cancelTitle = NSLocalizedStringFromTableInBundle(@"assets.header.cancel", @"QBImagePicker", self.imagePickerController.assetBundle, nil);
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
